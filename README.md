@@ -15,11 +15,19 @@ This project is built as part of the **Odin Technical Assessment**, focused on f
 
 ---
 ## ⚙️ Screenshots
-![App Screenshot](screenshots/Screenshot 1.png)
-! (screenshots/Screenshot 2.png)
-! (screenshots/Screenshot 3.png)
-! (screenshots/Screenshot 4.png)
-! (screenshots/Screenshot 5.png)
+![Screenshot 1](screenshots/Screenshot%201.png)
+
+### Forecast Results
+![Screenshot 2](screenshots/Screenshot%202.png)
+
+### Accuracy Metrics
+![Screenshot 3](screenshots/Screenshot%203.png)
+
+### Actual vs Predicted Chart
+![Screenshot 4](screenshots/Screenshot%204.png)
+
+### Full App View
+![Screenshot 5](screenshots/Screenshot%205.png)
 
 
 ## ⚙️ Setup Instructions

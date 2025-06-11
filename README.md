@@ -17,13 +17,18 @@ This project is built as part of the **Odin Technical Assessment**, focused on f
 
 ## ⚙️ Screenshots
 
-|| App Upload | Forecast Results |
-|------------|------------------|
-| ![Screenshot 1](Screenshots/Screenshot%201.png) | ![Screenshot 2](Screenshots/Screenshot%202.png) |
+![Screenshot 1](creenshots/Screenshot%201.png)
 
-| Accuracy Metrics | Forecast Chart |
-|------------------|----------------|
-| ![Screenshot 3](Screenshots/Screenshot%203.png) | ![Screenshot 4](Screenshots/Screenshot%204.png) |
+### Forecast Results
+![Screenshot 2](screenshots/Screenshot%202.png)
+
+### Accuracy Metrics
+![Screenshot 3](screenshots/Screenshot%203.png)
+
+### Actual vs Predicted Chart
+![Screenshot 4](screenshots/Screenshot%204.png)
+
+
 
 ---
 

@@ -1,15 +1,438 @@
-<!-- templates/upload.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Hospital Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .upload-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .upload-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3, #9C27B0, #FF9800);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .medical-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .upload-form {
+            position: relative;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: block;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: #4CAF50;
+            background: linear-gradient(145deg, #f0fff4, #e8f5e8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+        }
+
+        .file-input-wrapper.dragover {
+            border-color: #4CAF50;
+            background: linear-gradient(145deg, #f0fff4, #e8f5e8);
+            transform: scale(1.02);
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .file-input-content {
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .file-input-wrapper:hover .upload-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .file-input-text {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .file-input-subtext {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .file-selected {
+            display: none;
+            background: linear-gradient(145deg, #e8f5e8, #f0fff4);
+            border: 2px solid #4CAF50;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-icon {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-right: 12px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .file-size {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .remove-file {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-file:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .supported-formats {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .format-badges {
+            margin-top: 10px;
+        }
+
+        .format-badge {
+            display: inline-block;
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 0 4px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            .upload-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .file-input-content {
+                padding: 30px 15px;
+            }
+            
+            .upload-icon {
+                font-size: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Upload Excel File</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="file">
-        <button type="submit">Upload</button>
-    </form>
+    <div class="upload-container">
+        <div class="header">
+            <div class="medical-icon">🏥</div>
+            <h2>Upload Hospital Data</h2>
+            <p class="subtitle">Securely upload your Excel files for processing</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            <!-- Django CSRF token will be inserted here -->
+            {% csrf_token %}
+            
+            <div class="file-input-wrapper" id="fileInputWrapper">
+                <input type="file" name="file" class="file-input" id="fileInput" accept=".xlsx,.xls,.csv">
+                <div class="file-input-content">
+                    <div class="upload-icon">📁</div>
+                    <div class="file-input-text">Choose file or drag & drop</div>
+                    <div class="file-input-subtext">Upload your hospital data file</div>
+                </div>
+            </div>
+
+            <div class="file-selected" id="fileSelected">
+                <div class="file-info">
+                    <div class="file-details">
+                        <span class="file-icon">📊</span>
+                        <div>
+                            <div class="file-name" id="fileName"></div>
+                            <div class="file-size" id="fileSize"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="remove-file" id="removeFile">×</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                Upload File
+            </button>
+        </form>
+
+        <div class="supported-formats">
+            <p>Supported formats:</p>
+            <div class="format-badges">
+                <span class="format-badge">XLSX</span>
+                <span class="format-badge">XLS</span>
+                <span class="format-badge">CSV</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const fileInputWrapper = document.getElementById('fileInputWrapper');
+            const fileSelected = document.getElementById('fileSelected');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFile = document.getElementById('removeFile');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // File input change handler
+            fileInput.addEventListener('change', function() {
+                handleFileSelect();
+            });
+
+            // Drag and drop handlers
+            fileInputWrapper.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInputWrapper.classList.add('dragover');
+            });
+
+            fileInputWrapper.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInputWrapper.classList.remove('dragover');
+            });
+
+            fileInputWrapper.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileInputWrapper.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    // Manually set the file to input
+                    const dt = new DataTransfer();
+                    dt.items.add(files[0]);
+                    fileInput.files = dt.files;
+                    handleFileSelect();
+                }
+            });
+
+            // Remove file handler
+            removeFile.addEventListener('click', function() {
+                fileInput.value = '';
+                fileSelected.style.display = 'none';
+                fileInputWrapper.style.display = 'block';
+                submitBtn.disabled = true;
+            });
+
+            function handleFileSelect() {
+                const file = fileInput.files[0];
+                if (file) {
+                    // Check file type
+                    const allowedTypes = ['.xlsx', '.xls', '.csv'];
+                    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                    
+                    if (!allowedTypes.includes(fileExtension)) {
+                        alert('Please select a valid file type (XLSX, XLS, or CSV)');
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    fileSelected.style.display = 'block';
+                    fileInputWrapper.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
 </body>
 </html>

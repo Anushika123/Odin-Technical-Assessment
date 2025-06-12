@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Supply Forecast Results</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef4f7;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #2b6777;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #4b6584;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #34495e;
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            font-size: 18px;
+        }
+
+        ul li {
+            padding: 8px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+            font-size: 16px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2b6777;
+            color: white;
+        }
+
+        td {
+            background-color: #f2f9fb;
+        }
+
+        p {
+            font-size: 18px;
+            text-align: center;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Hospital Demand Forecast Report</h1>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% else %}
+            <h2>📊 Forecast Accuracy Metrics</h2>
+            <ul>
+                <li><strong>Mean Absolute Error (MAE):</strong> {{ mae }}</li>
+                <li><strong>Root Mean Squared Error (RMSE):</strong> {{ rmse }}</li>
+                <li><strong>Mean Absolute Percentage Error (MAPE):</strong> {{ mape }}%</li>
+            </ul>
+
+            <h2>📈 Historical Analysis</h2>
+            <h3>Actual vs Predicted Usage (Last 8 Weeks)</h3>
+            <div class="table-container">
+                {{ actual_pred_table|safe }}
+            </div>
+            {{ last8_plot|safe }}
+
+            <h2>🔮 Future Forecast</h2>
+            <h3>Predicted Demand for the Next 8 Weeks</h3>
+            <div class="table-container">
+                {{ future_table|safe }}
+            </div>
+            {{ forecast_plot|safe }}
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunrise Multispeciality Hospital - Forecast Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f8fb;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #0077b6;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: #023e8a;
+        }
+
+        .option {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #48cae4;
+            border-radius: 10px;
+            background-color: #f0fbff;
+        }
+
+        .option h3 {
+            margin-top: 0;
+        }
+
+        .btn {
+            background-color: #0077b6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #023e8a;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Sunrise Multispeciality Hospital</h1>
+    <p>Demand Forecasting Dashboard</p>
+</header>
+
+<div class="container">
+    <h2>Welcome to the Hospital Forecasting System</h2>
+
+    <div class="option">
+        <h3>1️⃣ Upload Weekly Usage History Data</h3>
+        <p>Upload the CSV/Excel file that contains hospital supply usage history.</p>
+        <a class="btn" href="{% url 'upload' %}">Upload Data</a>
+    </div>
+
+    <div class="option">
+        <h3>2️⃣ View Last Uploaded Forecast Results</h3>
+        <p>Run the machine learning model to predict supply demand for upcoming weeks.</p>
+        <a class="btn" href="{% url 'forecast_view' %}">View Results</a>
+    </div>
+
+    
+</div>
+
+</body>
+</html>

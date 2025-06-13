@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Demand Forecasting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50; /* A fresh green */
+            --secondary-color: #2c3e50; /* Dark blue for headings */
+            --accent-color: #FFC107; /* Amber for highlights */
+            --background-light: #f4f7f6; /* Light background */
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the top */
+            min-height: 100vh; /* Ensure it takes full viewport height */
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            max-width: 900px;
+            width: 100%;
+            margin: 20px 0; /* Add some margin top/bottom */
+        }
+
+        h1, h2 {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        /* Upload Form Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            background-color: #fafafa;
+            margin-bottom: 40px;
+        }
+
+        form label {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        form input[type="file"] {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            width: calc(100% - 22px); /* Account for padding */
+            max-width: 350px;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2); /* Green shadow */
+        }
+
+        form button:hover {
+            background-color: #45a049; /* Slightly darker green */
+            transform: translateY(-2px);
+        }
+
+        /* Error Message */
+        .error {
+            color: #d32f2f; /* Darker red for error */
+            background-color: #ffebee; /* Light red background */
+            border: 1px solid #ef9a9a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Forecast Results Section */
+        .results-section {
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .metrics {
+            background-color: #e8f5e9; /* Light green for metrics */
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 1.1em;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .metrics p strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* Table Styling */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners are applied */
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--secondary-color); /* Dark header */
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Zebra striping */
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Chart Styling */
+        .chart {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+        .chart img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr; /* Stack metrics on small screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 20px;
+            }
+
+            form button {
+                width: 100%;
+            }
+
+            table, th, td {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Hospital Demand Forecasting</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="file-upload">Select CSV or Excel file:</label>
+            <input type="file" name="file" id="file-upload" required>
+            <button type="submit">Upload & Forecast</button>
+        </form>
+
+        {% if error %}
+            <p class="error"><strong>Error:</strong> {{ error }}</p>
+        {% endif %}
+
+        {% if forecast_table %}
+            <div class="results-section">
+                <h2>Forecast Performance Metrics</h2>
+                <div class="metrics">
+                    <p><strong>Mean Absolute Error (MAE):</strong> {{ mae|floatformat:2 }}</p>
+                    <p><strong>Root Mean Squared Error (RMSE):</strong> {{ rmse|floatformat:2 }}</p>
+                    <p><strong>Mean Absolute Percentage Error (MAPE):</strong> {{ mape|floatformat:2 }}%</p>
+                </div>
+
+                <h2>Forecast Table (Weeks 149–156)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Actual</th>
+                            <th>Predicted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week, actual, predicted in forecast_table %}
+                        <tr>
+                            <td>{{ week }}</td>
+                            <td>{{ actual }}</td>
+                            <td>{{ predicted|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="chart">
+                    <h2>Actual vs Predicted Demand</h2>
+                    <img src="{{ plot_url }}" alt="Forecast Chart">
+                </div>
+            </div>
+        {% endif %}
+
+    </div> </body>
+</html>

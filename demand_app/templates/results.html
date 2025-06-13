@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forecast Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f8ff;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
+            height: 400px;
+        }
+
+        .forecast-block {
+            margin-bottom: 50px;
+            background: #ffffffcc;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<h2>Hospital Supplies Forecast Results</h2>
+
+{% for result in results %}
+<h3>Item Code: {{ result.sku }}</h3>
+<p><strong>Description:</strong> {{ result.description }}</p>  <!-- ✅ Add this line -->
+<p><strong>Mean Absolute Error (MAE):</strong> {{ result.error }}</p>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th>Actual</th>
+                <th>Predicted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in result.actual %}
+            <tr>
+                <td>Week {{ forloop.counter|add:148 }}</td>
+                <td>{{ i }}</td>
+                <td>{{ result.predicted|slice:forloop.counter0|stringformat:"s" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <canvas id="chart{{ forloop.counter }}"></canvas>
+    <script>
+        const ctx{{ forloop.counter }} = document.getElementById('chart{{ forloop.counter }}').getContext('2d');
+        new Chart(ctx{{ forloop.counter }}, {
+            type: 'line',
+            data: {
+                labels: [{% for i in result.actual %}"Week {{ forloop.counter|add:148 }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+                datasets: [
+                    {
+                        label: 'Actual',
+                        data: {{ result.actual|safe }},
+                        borderColor: 'blue',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Predicted',
+                        data: {{ result.predicted|safe }},
+                        borderColor: 'red',
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Actual vs Predicted Demand for {{ result.sku }}'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+{% endfor %}
+
+</body>
+</html>
